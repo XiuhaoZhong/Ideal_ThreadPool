@@ -6,6 +6,8 @@ class IdealThread {
 		IdealThread();
 		~IdealThread();
 
+
+	
 	private:
 
 };
