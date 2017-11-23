@@ -1,6 +1,7 @@
 #ifndef _IDEAL_THREAD_POOL_MANAGER_H_
 #define _IDEAL_THREAD_POOL_MANAGER_H_
 
+#include "common.h"
 
 class IdealThread;
 
