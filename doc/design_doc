@@ -1,0 +1,28 @@
+This is a ThreadPool, every class's design follows:
+
+1.IdealThreadPoolManager:
+	a.Managers the thread pool, holds a IdealThreadPool object.
+	b.Interface to outside which uses thread pool via the manager.
+	c.This is a singleton.
+
+2.IdealThreadPool
+	a.Holds a thread queue, and manages and  all the threads.
+	b.Dispatches task to a apppropriate threads.
+
+3.IdealThread
+	Defines thread interface which work threads should override.
+
+4.IdealWorkThread
+	Implements the interface defined by IdealThread.
+
+5.IdealTask
+	Defines task interface which word task shoul override.
+
+6.IdealWorkTask
+	Implements the interfaces defined by IdealTask.
+
+7.IdealThreadMutex
+	Capsolutes thread's mutext.
+
+8.IdealThreadCondition
+	Capsolutes thread's condition.

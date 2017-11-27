@@ -4,16 +4,19 @@
 #include "common.h"
 
 class IdealThreadPool;
+class IdealTaskBase;
 
 class IdealThreadPoolManager {
 	public:
 		IdealThreadPoolManager* getInstance();
 		~IdealThreadPoolManager();
 
-		bool initialize();
-		bool finalize();
-
+		Ideal_ERR insertTaskIntoThreadPool(IdealTaskBase* task);
 		
+	protected:
+		IdealThreadPool* getIdealThreadPool() const;
+		Ideal_ERR initialize();
+		void finalize();
 
 	private:
 		IdealThreadPoolManager();
@@ -21,10 +24,6 @@ class IdealThreadPoolManager {
 
 		static IdealThreadPoolManager *instance_;
 		IdealThreadPool thread_pool_;
-
-
-
-		DISALLOW_COPY_AND_ASSIGN(IdealThreadPoolManager);
 };
 
 #endif // _IDEAL_THREAD_POOL_MANAGER_H_
