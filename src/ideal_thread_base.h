@@ -7,6 +7,18 @@
 class IdealTaskBase;
 
 /**
+ * thread's running function
+ *
+ * thread runs the function, in this function,
+ * 
+ * thread get task from thread pool's task 
+ *
+ * queue, and run it.
+ *
+ */
+void* (* threadFunc)(void *arg);
+
+/**
  * IdealThreadBase is all the threads' base,
  *
  * provides the default implementation for
@@ -21,23 +33,25 @@ class IdealTaskBase;
 class IdealThreadBase : public IdealThread {
 	public:
 		IdealThreadBase();
+		IdealThreadBase(pthread_attr_t);
 		IdealThreadBase(const IdealWorkThread &thread);
 		IdealThreadBase& operator=(const IdealThreadBase &thread);
 		~virtual IdealThreadBase();
 
-		virtual void executeTask() {}
-		virtual void pauseTask() {}
-		virtual void continueTask() {}
-		virtual void threadExit() {}
+		virtual void start();
+		virtual void destory();
 
 		virtual IdealThreadState getThreadState();
 		
 		Ideal_ERR void setCurrentTask(IdealTaskBase *task);
 
+		// thread exxcutes the function once be created.
+		void* run(void *arg);
+
 	private:
 		IdealThreadState thread_state_;
 		IdealTaskBase *current_task_;
-		pthread_thread_t *thread_;
+		pthread_thread_t thread_;
 };
 
 

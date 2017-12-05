@@ -19,7 +19,8 @@ IdealThreadPoolManager::IdealThreadPoolManager(IdealThreadPool* thread_pool):
 }
 
 IdealThreadPoolManager::~IdealThreadPoolManager() {
-	finalize();
+	if (finalize() != IDEAL_OK)
+		LOG(ERROR);
 }
 
 Ideal_ERR IdealThreadPoolManager::initialize() {
@@ -31,11 +32,13 @@ Ideal_ERR IdealThreadPoolManager::initialize() {
 	return ret;
 }
 
-void IdealThreadPoolManager::finalize() {
+Ideal_ERR IdealThreadPoolManager::finalize() {
 	if (threaf_pool_) {
 		delete thread_pool_;
 		thread_pool = NULL;
 	}
+
+	return IDEAL_OK;
 }
 
 IdealThreadPool* IdealThreadPoolManager::getIdealThreadPool() const {

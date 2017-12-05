@@ -16,7 +16,7 @@ class IdealThreadPoolManager {
 	protected:
 		IdealThreadPool* getIdealThreadPool() const;
 		Ideal_ERR initialize();
-		void finalize();
+		Ideal_ERR finalize();
 
 	private:
 		IdealThreadPoolManager();

@@ -1,11 +1,13 @@
-/*
+/**
  * This file function:
  *
  * 1. includes common headers for all the files;
+ *
  * 2. define base structs in the projects.
+ *
  * 3. macros' definition.
  *
- * */
+ */
 
 #ifndef _COMMON_H_
 #define _COMMON_H_
@@ -37,4 +39,4 @@ enum Ideal_ERR {
 	IDEAL_NO_THREAD_USE
 }
 
-#endif // _COMMON_h_
+#endif // _COMMON_H_

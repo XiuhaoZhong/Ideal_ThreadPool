@@ -3,10 +3,12 @@
 
 #include "common.h"
 
-#include <queue>
+#include <vector>
 
 class IdealTaskBase;
 class IdealThreadBase;
+class IdealMutex;
+class IdealCond;
 
 /**
  * IdealThreadPool holds a thread queue,
@@ -17,32 +19,44 @@ class IdealThreadBase;
  *
  */
 class IdealThreadPool {
+public:
+	IdealThreadPool();
+	IdealThreadPool(int thread_num, int max_thread_num);
+	~IdealThreadPool();
 
-	public:
-		IdealThreadPool();
-		~IdealThreadPool();
+	// thread number in normal.
+	void setThreadNumber(const int num);
+	int getThreadNumber() const;
 
-		void setThreadNumber(const int num);
-		int getThreadNumber() const;
+	// max thread number in busy.
+	void setMaxNumber(const int max);
+	int getMaxNumber() const;
 
-		Ideal_ERR insertTask(IdealTaskBase* task);
-		Ideal_ERR disptachTask(IdealTaskBase *task);
+	// insert task into task_queue_ when there 
+	// is not idle thread and thread num is max.
+	Ideal_ERR insertTask(IdealTaskBase* task);
 
-	protected:
-		Ideal_ERR initialize();
-		void finalize();
-		
-		// find a reasonable thread from thread queue to 
-		// dispatch a task.
-		IdealThreadBase* findReasonableThread() const;
+	// dispatch task to a idle thread, and put 
+	// the task into task_queue if no idle thread.
+	Ideal_ERR disptachTask(IdealTaskBase *task);
 
-	private:
+protected:
+	Ideal_ERR initialize();
+	Ideal_ERR finalize();
 
-		int thread_num_;
-		std::queue<IdealThreadBase *> *thread_queue_;
-		std::queue<IdealTaskBase *> *task_queue_;
-	
-		DISALLOW_COPY_AND_ASSIGN(IdealThreadPool);
+	// find a reasonable thread from thread queue to 
+	// dispatch a task.
+	IdealThreadBase* getIdleThread() const;
+
+private:
+	int thread_num_;
+	int max_thread_num_;
+	IdealMutex *mutex_;
+	IdealCond *cond_;
+	std::vector<IdealThreadBase *> *thread_queue_;
+	std::vector<IdealTaskBase *> *task_queue_;
+
+	DISALLOW_COPY_AND_ASSIGN(IdealThreadPool);
 };
 
 #endif // _IDEAL_THREAD_POOL_H_

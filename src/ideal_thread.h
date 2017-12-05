@@ -14,10 +14,8 @@ class IdealThread {
 		IdealThread();
 		virtual ~IdealThread();
 
-		virtual void executeTask() = 0;
-		virtual void pauseTask() = 0;
-		virtual void continueTask() = 0;
-		virtual void threadExit() = 0;
+		virtual void start() = 0;
+		virtual void destory() = 0;
 		
 		virtual IdealThreadState getThreadState() const = 0;
 };
