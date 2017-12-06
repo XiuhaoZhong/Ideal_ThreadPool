@@ -24,6 +24,18 @@
 
 #define LOG(ERROR) (printf("%s: [%d, %s] failed", __FILE__, __LINE__, __FUNCTION__)) 
 
+/**
+ * thread's running function
+ *
+ * thread runs the function, in this function,
+ * 
+ * thread get task from thread pool's task 
+ *
+ * queue, and run it.
+ *
+ */
+void* (* threadFunc)(void *arg) 
+
 enum IdealThreadState {
 	IDLE = 0,
 	RUNNING,

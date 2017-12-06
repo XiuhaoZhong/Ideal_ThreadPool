@@ -15,7 +15,33 @@ IdealThreadPool::IdealThreadPool(int thread_num, int max_thread_num)
 	if (initialize() != IDEAL_OK)
 		LOG(ERROR);
 }
-																
+
+void *start_thread(void *arg) {
+	IdealThreadPool *itp = (IdealThreadPool *) arg;
+	if (itp) {
+		ipt->Run();
+	}
+}
+
+void Run() {
+	for (;;) {
+		int s;
+		mutex_.lock();
+		
+		if (s != 0)
+			LOG(ERROR);
+
+		while (thread_queue.empty()) {
+			cond_.wait(mutex_.getMutex());	
+		}
+
+		IdealTaskBase *task = task_queue_->front();
+		task_queue_->erase(task_queue_->begin());
+		mutex_.unlock();
+
+		task->run();
+	}
+}
 
 IdealThreadPool::~IdealThreadPool() {
 	if (finalize() != IDEAL_OK)
@@ -28,6 +54,8 @@ Ideal_ERR IdealThreadPool::initialize() {
 
 	mutex_ = new IdealMutex();
 	cond_ = new IdealCond();
+
+	createThreads();
 
 	return IDEAL_OK;
 }
@@ -67,16 +95,30 @@ int IdealThreadPool::getMaxNumber() const {
 }
 
 Ideal_ERR IdealThreadPool::insertTask(IdealTaskBase *task) {
+	int s;
+	s = mutex_->lock();
+	if (s != 0)
+		LOG(ERROR);
+
+	task_queue_.push_back(task);
+	s = cond_->cond_signal();
+	if (s != 0)
+		LOG(ERROR);
+
+	s = mutex_->unlock();
+	if (s != 0)
+		LOG(ERROR);
 
 	return IDEAL_OK;
 }
 
-Ideal_ERR IdealThreadPool::dispatchTask(IdealTaskBase *task) {
+void IdealThreadPool::createThreads() {
+	if (thread_num_ <= 0) 
+		return ;
 
-	return IDEAL_OK;
+	for (int i = 0; i < thread_num_; i++) {
+		IdealThreadBase ideal_thread = new IdealThreadBase(start_thread);
+		thread_queue_->push_back(ideal_thread);
+	}
 }
 
-IdealThreadBase* IdealThreadPool::getIdleThread() const {
-
-	return IdealThreadBase();
-}

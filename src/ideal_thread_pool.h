@@ -17,6 +17,8 @@ class IdealCond;
  *
  * to appropriate thread.
  *
+ * Thread pool is a singleton.
+ *
  */
 class IdealThreadPool {
 public:
@@ -36,17 +38,13 @@ public:
 	// is not idle thread and thread num is max.
 	Ideal_ERR insertTask(IdealTaskBase* task);
 
-	// dispatch task to a idle thread, and put 
-	// the task into task_queue if no idle thread.
-	Ideal_ERR disptachTask(IdealTaskBase *task);
+	void Run();
 
 protected:
 	Ideal_ERR initialize();
 	Ideal_ERR finalize();
 
-	// find a reasonable thread from thread queue to 
-	// dispatch a task.
-	IdealThreadBase* getIdleThread() const;
+	void createThreads();
 
 private:
 	int thread_num_;
